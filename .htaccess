@@ -1,1 +1,7 @@
 #Options -Indexes
+
+# PWA React mobile app — SPA routing
+RewriteEngine On
+RewriteCond %{REQUEST_URI} ^/mobile/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^mobile/.*$ /mobile/index.html [L]
