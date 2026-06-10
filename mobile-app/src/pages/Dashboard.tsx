@@ -27,18 +27,28 @@ export default function Dashboard() {
         </button>
       </header>
 
-      <main className="flex-1 flex flex-col items-center justify-center px-6 text-center">
-        <div className="bg-white rounded-2xl shadow-sm p-8 max-w-sm w-full">
-          <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-7 h-7 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
+      <main className="flex-1 px-6 py-6">
+        <div className="max-w-sm mx-auto">
           <h2 className="text-xl font-bold text-gray-800 mb-1">¡Bienvenido!</h2>
-          <p className="text-gray-500 text-sm">{username}</p>
-          <p className="text-gray-400 text-xs mt-4">
-            Sesión iniciada correctamente
-          </p>
+          <p className="text-gray-500 text-sm mb-6">{username}</p>
+
+          <button
+            onClick={() => navigate('/clients')}
+            className="w-full bg-white rounded-2xl shadow-sm p-5 flex items-center gap-4 text-left active:scale-[0.98] transition-transform"
+          >
+            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+              <svg className="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 10-4-4 4 4 0 004 4zm6 0a4 4 0 10-3-6.65" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <div className="font-semibold text-gray-800">Mis clientes</div>
+              <div className="text-sm text-gray-500">Clientes asignados a ti</div>
+            </div>
+            <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
         </div>
       </main>
     </div>
