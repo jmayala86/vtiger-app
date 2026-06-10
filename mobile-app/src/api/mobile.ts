@@ -64,13 +64,14 @@ export async function loginUser(username: string, password: string): Promise<Log
 
 /**
  * Resuelve el ID en formato webservice (ej. "19x1") del usuario logueado
- * usando el campo 'assigned_user_id' del describe de Contacts, que incluye
- * el WS ID del usuario actual en su valor default.
+ * usando el campo 'assigned_user_id' del describe de Accounts, que incluye
+ * el WS ID del usuario actual en su valor default. Esto funciona para
+ * cualquier usuario (admin o no), a diferencia de consultar el módulo Users.
  */
 export async function resolveUserWsId(session: string): Promise<string> {
   const result = await callApi<{ describe: { fields: Array<{ name: string; default?: string }> } }>(
     'describe',
-    { _session: session, module: 'Contacts' },
+    { _session: session, module: 'Accounts' },
   )
   const assignedField = result.describe.fields.find((f) => f.name === 'assigned_user_id')
   if (!assignedField?.default) {

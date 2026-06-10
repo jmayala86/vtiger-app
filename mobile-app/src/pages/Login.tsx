@@ -5,7 +5,7 @@ import { useAuthStore } from '../store/auth'
 
 export default function Login() {
   const navigate = useNavigate()
-  const { setAuth, setUserWsId } = useAuthStore()
+  const setAuth = useAuthStore((s) => s.setAuth)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -18,7 +18,6 @@ export default function Login() {
     try {
       const result = await loginUser(username, password)
       setAuth(result.session, result.userid, username)
-      setUserWsId('')  // invalida caché para forzar resolución fresca
       navigate('/dashboard', { replace: true })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido')
