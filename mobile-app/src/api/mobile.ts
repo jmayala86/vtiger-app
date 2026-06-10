@@ -55,19 +55,21 @@ export async function loginUser(username: string, password: string): Promise<Log
 }
 
 /**
- * Resuelve el ID en formato webservice (ej. "19x1") del usuario logueado,
- * necesario para filtrar registros por assigned_user_id en VTQL.
+ * Resuelve el ID en formato webservice (ej. "19x1") del usuario logueado
+ * usando el campo 'assigned_user_id' del describe de Accounts, que incluye
+ * el WS ID del usuario actual en su valor default. Esto funciona para
+ * cualquier usuario (admin o no), a diferencia de consultar el módulo Users.
  */
-export async function resolveUserWsId(session: string, username: string): Promise<string> {
-  const escaped = username.replace(/'/g, "\\'")
-  const result = await callApi<{ records: Array<{ id: string }> }>('query', {
-    _session: session,
-    query: `SELECT id FROM Users WHERE user_name = '${escaped}';`,
-  })
-  if (!result.records?.length) {
+export async function resolveUserWsId(session: string): Promise<string> {
+  const result = await callApi<{ describe: { fields: Array<{ name: string; default?: string }> } }>(
+    'describe',
+    { _session: session, module: 'Accounts' },
+  )
+  const assignedField = result.describe.fields.find((f) => f.name === 'assigned_user_id')
+  if (!assignedField?.default) {
     throw new Error('No se pudo identificar al usuario')
   }
-  return result.records[0].id
+  return assignedField.default
 }
 
 export interface ClientRecord {

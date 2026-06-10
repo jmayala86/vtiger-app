@@ -27,7 +27,7 @@ export default function Clients() {
       try {
         let wsid = userWsId
         if (!wsid) {
-          wsid = await resolveUserWsId(session, username)
+          wsid = await resolveUserWsId(session)
           setUserWsId(wsid)
         }
         const res = await fetchClients(session, wsid, page)
