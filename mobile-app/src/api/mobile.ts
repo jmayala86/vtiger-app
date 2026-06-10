@@ -82,11 +82,10 @@ export async function resolveUserWsId(session: string): Promise<string> {
 
 export interface ClientRecord {
   id: string
-  firstname?: string
-  lastname?: string
-  email?: string
+  accountname: string
   phone?: string
-  mobile?: string
+  email1?: string
+  bill_city?: string
 }
 
 export interface ClientsPage {
@@ -95,14 +94,14 @@ export interface ClientsPage {
 }
 
 /**
- * Devuelve los contactos (Contacts) asignados al usuario indicado.
+ * Devuelve los clientes (Accounts) asignados al usuario indicado.
  */
 export async function fetchClients(
   session: string,
   userWsId: string,
   page = 0,
 ): Promise<ClientsPage> {
-  const query = `SELECT id, firstname, lastname, email, phone, mobile FROM Contacts WHERE assigned_user_id = '${userWsId}'`
+  const query = `SELECT id, accountname, phone, email1, bill_city FROM Accounts WHERE assigned_user_id = '${userWsId}'`
   const result = await callApi<{ records: ClientRecord[]; nextPage: number }>('query', {
     _session: session,
     query,
