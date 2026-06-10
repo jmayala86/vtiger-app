@@ -64,7 +64,7 @@ export default function Clients() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-        <h1 className="font-semibold text-gray-800 text-lg">Mis clientes</h1>
+        <h1 className="font-semibold text-gray-800 text-lg">Mis contactos</h1>
       </header>
 
       <main className="flex-1 px-4 py-4">
@@ -75,7 +75,7 @@ export default function Clients() {
         )}
 
         {!loaded && loading && (
-          <div className="text-center text-gray-400 py-12">Cargando clientes...</div>
+          <div className="text-center text-gray-400 py-12">Cargando contactos...</div>
         )}
 
         {loaded && clients.length === 0 && !error && (
@@ -85,30 +85,33 @@ export default function Clients() {
         )}
 
         <ul className="space-y-3">
-          {clients.map((c) => (
-            <li key={c.id} className="bg-white rounded-2xl shadow-sm p-4">
-              <div className="font-semibold text-gray-800">{c.accountname || 'Sin nombre'}</div>
-              {c.bill_city && <div className="text-sm text-gray-500 mt-0.5">{c.bill_city}</div>}
-              <div className="mt-2 flex flex-col gap-1">
-                {c.phone && (
-                  <a href={`tel:${c.phone}`} className="text-sm text-primary flex items-center gap-2">
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                    {c.phone}
-                  </a>
-                )}
-                {c.email1 && (
-                  <a href={`mailto:${c.email1}`} className="text-sm text-primary flex items-center gap-2 break-all">
-                    <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                    {c.email1}
-                  </a>
-                )}
-              </div>
-            </li>
-          ))}
+          {clients.map((c) => {
+            const fullName = [c.firstname, c.lastname].filter(Boolean).join(' ') || 'Sin nombre'
+            const contactPhone = c.phone || c.mobile
+            return (
+              <li key={c.id} className="bg-white rounded-2xl shadow-sm p-4">
+                <div className="font-semibold text-gray-800">{fullName}</div>
+                <div className="mt-2 flex flex-col gap-1">
+                  {contactPhone && (
+                    <a href={`tel:${contactPhone}`} className="text-sm text-primary flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                      {contactPhone}
+                    </a>
+                  )}
+                  {c.email && (
+                    <a href={`mailto:${c.email}`} className="text-sm text-primary flex items-center gap-2 break-all">
+                      <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                      {c.email}
+                    </a>
+                  )}
+                </div>
+              </li>
+            )
+          })}
         </ul>
 
         {nextPage > 0 && (
