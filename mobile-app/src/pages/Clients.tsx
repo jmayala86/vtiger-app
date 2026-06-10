@@ -80,7 +80,7 @@ export default function Clients() {
 
         {loaded && clients.length === 0 && !error && (
           <div className="text-center text-gray-400 py-12">
-            No tienes clientes asignados.
+            Aún no has registrado tu primer contacto
           </div>
         )}
 
