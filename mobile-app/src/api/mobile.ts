@@ -74,7 +74,7 @@ export interface ClientRecord {
   id: string
   accountname: string
   phone?: string
-  email?: string
+  email1?: string
   bill_city?: string
 }
 
@@ -91,7 +91,7 @@ export async function fetchClients(
   userWsId: string,
   page = 0,
 ): Promise<ClientsPage> {
-  const query = `SELECT id, accountname, phone, email, bill_city FROM Accounts WHERE assigned_user_id = '${userWsId}'`
+  const query = `SELECT id, accountname, phone, email1, bill_city FROM Accounts WHERE assigned_user_id = '${userWsId}'`
   const result = await callApi<{ records: ClientRecord[]; nextPage: number }>('query', {
     _session: session,
     query,
