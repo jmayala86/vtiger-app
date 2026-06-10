@@ -27,7 +27,7 @@ export default function Clients() {
       try {
         let wsid = userWsId
         if (!wsid) {
-          wsid = await resolveUserWsId(session, username)
+          wsid = await resolveUserWsId(session)
           setUserWsId(wsid)
         }
         const res = await fetchClients(session, wsid, page)
@@ -80,7 +80,7 @@ export default function Clients() {
 
         {loaded && clients.length === 0 && !error && (
           <div className="text-center text-gray-400 py-12">
-            No tienes clientes asignados.
+            Aún no has registrado tu primer contacto
           </div>
         )}
 
