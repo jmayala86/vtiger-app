@@ -17,10 +17,18 @@ async function callApi<T>(operation: string, params: Record<string, string>): Pr
   })
 
   if (!res.ok) {
-    throw new Error('Error de conexión con el servidor')
+    throw new Error(`Error del servidor (${res.status})`)
   }
 
-  const data = await res.json()
+  const text = await res.text()
+  let data: { success: boolean; result?: T; error?: { code: number; message: string } }
+  try {
+    data = JSON.parse(text)
+  } catch {
+    // El servidor devolvió algo que no es JSON (página de error PHP/Apache/vtiger)
+    const preview = text.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 120)
+    throw new Error(`El servidor devolvió una respuesta inesperada: "${preview}"`)
+  }
 
   if (!data.success) {
     // 1501 = Login required / session expired
