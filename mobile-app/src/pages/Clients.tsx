@@ -25,7 +25,7 @@ export default function Clients() {
       setLoading(true)
       setError('')
       try {
-        let wsid = userWsId
+        let wsid = userWsId || ''
         if (!wsid) {
           wsid = await resolveUserWsId(session)
           setUserWsId(wsid)
