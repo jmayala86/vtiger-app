@@ -460,6 +460,62 @@
     .agenda-card-badge.held { color: #15803d; background: #dcfce7; }
     .agenda-card-badge.planned { color: #1d4ed8; background: #dbeafe; }
 
+    /* ---------- Contacts & Sales list: avatar cards ---------- */
+    /* Enhanced rows (data-mlc) hide their original cells and show a single card */
+    #listview-table tr.listViewEntries[data-mlc] {
+        display: block;
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+    }
+    #listview-table tr.listViewEntries[data-mlc] > td:not(.mlc-cell) { display: none !important; }
+    #listview-table tr.listViewEntries[data-mlc] > td.mlc-cell { display: block; padding: 0; border: 0; }
+
+    .mlc-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--v8-surface);
+        border: 1px solid var(--v8-border);
+        border-radius: 14px;
+        box-shadow: var(--v8-shadow-sm);
+        padding: 14px;
+        margin-bottom: 12px;
+    }
+    .mlc-avatar {
+        flex: 0 0 auto;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: 0.3px;
+    }
+    .mlc-avatar.mlc-blue { background: #dbeafe; color: #2563eb; }
+    .mlc-avatar.mlc-orange { background: #ffedd5; color: #ea580c; }
+    .mlc-content { flex: 1 1 auto; min-width: 0; }
+    .mlc-title {
+        font-weight: 700;
+        color: var(--v8-text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .mlc-line {
+        color: var(--v8-text-muted);
+        font-size: 13px;
+        margin-top: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .mlc-chevron { flex: 0 0 auto; color: #c0c7d0; font-size: 16px; }
+
     /* ---------- Floating action button (+) ---------- */
     .mobile-fab {
         position: fixed;
