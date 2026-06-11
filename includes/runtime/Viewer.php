@@ -223,7 +223,15 @@ function vtemplate_path($templateName, $moduleName='') {
 function vresource_url($url) {
     global $vtiger_current_version;
     if (stripos($url, '://') === false) {
-        $url = $url .'?v='.$vtiger_current_version;
+        $version = $vtiger_current_version;
+        // Append the local file's modification time so that updated assets bust
+        // the browser cache automatically. The static version string alone never
+        // changes, which otherwise keeps stale CSS/JS cached after edits.
+        $path = strtok($url, '?');
+        if ($path !== false && is_file($path)) {
+            $version .= '.' . filemtime($path);
+        }
+        $url = $url .'?v='.$version;
     }
     return $url;
 }
