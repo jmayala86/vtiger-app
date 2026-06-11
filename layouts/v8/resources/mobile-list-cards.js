@@ -12,8 +12,12 @@
  **********************************************************************************/
 (function () {
 	var MEDIA = '(max-width: 767px)';
-	// module -> avatar color modifier
-	var MODULES = { Contacts: 'mlc-blue', Potentials: 'mlc-orange' };
+	// Per-module config: avatar color, and optional explicit name/line fields
+	// (by column data-name). When fields are omitted the card auto-derives them.
+	var MODULES = {
+		Contacts:   { color: 'mlc-blue' },
+		Potentials: { color: 'mlc-orange', nameFields: ['potentialname'], lineFields: ['related_to', 'sales_stage'] }
+	};
 
 	function isMobile() {
 		return window.matchMedia && window.matchMedia(MEDIA).matches;
@@ -51,29 +55,34 @@
 		return null;
 	}
 
-	function enhanceRow(row, colorClass) {
+	function enhanceRow(row, cfg) {
 		if (row.getAttribute('data-mlc')) { return; }
 		var values = row.querySelectorAll('td.listViewEntryValue');
 		if (!values.length) { return; }
 		row.setAttribute('data-mlc', '1');
 
-		// Name: combine first/last name columns when present, else the first column.
-		var fn = findCell(row, ['firstname', 'first_name']);
-		var ln = findCell(row, ['lastname', 'last_name']);
+		// --- Title / avatar name ---
 		var nameCells = [];
 		var nameText = '';
-		if (fn) {
-			nameText = cellText(fn);
-			nameCells.push(fn);
-			if (ln) {
-				var l = cellText(ln);
-				if (l) { nameText = (nameText + ' ' + l).trim(); }
-				nameCells.push(ln);
-			}
-		} else {
-			nameCells.push(values[0]);
-			nameText = cellText(values[0]);
+		if (cfg.nameFields) {
+			var nc = findCell(row, cfg.nameFields);
+			if (nc) { nameCells.push(nc); nameText = cellText(nc); }
 		}
+		if (!nameCells.length) {
+			// Default: combine first/last name columns when present.
+			var fn = findCell(row, ['firstname', 'first_name']);
+			var ln = findCell(row, ['lastname', 'last_name']);
+			if (fn) {
+				nameText = cellText(fn);
+				nameCells.push(fn);
+				if (ln) {
+					var l = cellText(ln);
+					if (l) { nameText = (nameText + ' ' + l).trim(); }
+					nameCells.push(ln);
+				}
+			}
+		}
+		if (!nameCells.length) { nameCells.push(values[0]); nameText = cellText(values[0]); }
 
 		var td = document.createElement('td');
 		td.className = 'mlc-cell';
@@ -83,7 +92,7 @@
 		card.className = 'mlc-card';
 
 		var avatar = document.createElement('div');
-		avatar.className = 'mlc-avatar ' + colorClass;
+		avatar.className = 'mlc-avatar ' + cfg.color;
 		avatar.textContent = initials(nameText);
 
 		var content = document.createElement('div');
@@ -93,16 +102,25 @@
 		title.textContent = nameText || '—';
 		content.appendChild(title);
 
-		var added = 0;
-		Array.prototype.forEach.call(values, function (c) {
-			if (nameCells.indexOf(c) >= 0 || added >= 3) { return; }
+		// --- Detail lines: explicit fields when configured, else first few columns ---
+		var lineCells = [];
+		if (cfg.lineFields) {
+			cfg.lineFields.forEach(function (f) {
+				var c = findCell(row, [f]);
+				if (c) { lineCells.push(c); }
+			});
+		} else {
+			Array.prototype.forEach.call(values, function (c) {
+				if (nameCells.indexOf(c) < 0 && lineCells.length < 3) { lineCells.push(c); }
+			});
+		}
+		lineCells.forEach(function (c) {
 			var t = cellText(c);
 			if (!t) { return; }
 			var line = document.createElement('div');
 			line.className = 'mlc-line';
 			line.textContent = t;
 			content.appendChild(line);
-			added++;
 		});
 
 		var chev = document.createElement('span');
@@ -113,6 +131,24 @@
 		card.appendChild(chev);
 		td.appendChild(card);
 		row.appendChild(td);
+	}
+
+	// Keep the bottom-nav highlight in sync with the current module (the
+	// server renders it correctly on full loads; this also covers pjax).
+	function currentModuleFromUrl() {
+		var m = /[?&]module=([A-Za-z0-9_]+)/.exec(window.location.search || window.location.href);
+		return m ? m[1] : '';
+	}
+	function syncBottomNavActive() {
+		var nav = document.querySelector('.mobile-bottom-nav');
+		if (!nav) { return; }
+		var mod = currentModuleFromUrl();
+		Array.prototype.forEach.call(nav.querySelectorAll('.mobile-nav-item'), function (a) {
+			var hm = /module=([A-Za-z0-9_]+)/.exec(a.getAttribute('href') || '');
+			var itemMod = hm ? hm[1] : '';
+			var active = itemMod === mod || (itemMod === 'Calendar' && (mod === 'Calendar' || mod === 'Events'));
+			if (active) { a.classList.add('active'); } else { a.classList.remove('active'); }
+		});
 	}
 
 	function ensureFab(module) {
@@ -126,11 +162,12 @@
 	}
 
 	function run() {
+		syncBottomNavActive();
 		if (!isMobile()) { return; }
-		var color = MODULES[getModule()];
-		if (!color) { return; }
+		var cfg = MODULES[getModule()];
+		if (!cfg) { return; }
 		var rows = document.querySelectorAll('#listview-table tr.listViewEntries');
-		Array.prototype.forEach.call(rows, function (r) { enhanceRow(r, color); });
+		Array.prototype.forEach.call(rows, function (r) { enhanceRow(r, cfg); });
 		if (rows.length) { ensureFab(getModule()); }
 	}
 
@@ -144,6 +181,7 @@
 
 	function start() {
 		run();
+		window.addEventListener('popstate', syncBottomNavActive);
 		var target = document.getElementById('page') || document.body;
 		try {
 			new MutationObserver(schedule).observe(target, { childList: true, subtree: true });
