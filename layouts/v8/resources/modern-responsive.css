@@ -258,3 +258,89 @@
         width: 100% !important;
     }
 }
+
+/* =====================================================================
+ * Mobile-only navbar simplification, hamburger removal, view-scoped
+ * sidebar hiding, and Calendar mobile tweaks
+ * ===================================================================== */
+@media (max-width: 767px) {
+
+    /* ---------- Simplified top navbar: only brand + user ---------- */
+    /* Hide the app-switcher hamburger (mobile navigation = bottom nav bar) */
+    #appnavigator,
+    .app-navigator-container .app-switcher-container { display: none !important; }
+    /* Hide the search / menu toggle buttons and the global search box */
+    .app-fixed-navbar .navbar-header { display: none !important; }
+    .global-nav .search-links-container,
+    #search-links-container { display: none !important; }
+
+    /* Brand title "CRM ARBOURS" replaces the logo image */
+    .app-navigator-container,
+    .logo-container,
+    .company-logo { width: auto !important; }
+    .company-logo img { display: none !important; }
+    .company-logo::after {
+        content: "CRM ARBOURS";
+        display: inline-block;
+        font-weight: 800;
+        font-size: 18px;
+        letter-spacing: 0.3px;
+        color: var(--v8-primary);
+        line-height: 46px;
+        white-space: nowrap;
+    }
+
+    /* Keep only the user dropdown, pinned to the top-right.
+       The collapsed navbar is visibility:hidden on mobile (only the >=768px
+       rule restores it), so we explicitly restore visibility here. */
+    #navbar.global-actions {
+        display: block !important;
+        visibility: visible !important;
+        height: auto !important;
+        width: auto !important;
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0 6px;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+    #navbar.global-actions .navbar-nav { margin: 0; display: block; visibility: visible !important; }
+    #navbar.global-actions .navbar-nav > li { display: none !important; }
+    /* Restore visibility on the user item (without forcing display on inner
+       nodes, which would break the inline Font Awesome glyph) */
+    #navbar.global-actions .navbar-nav > li:last-child,
+    #navbar.global-actions .navbar-nav > li:last-child * { visibility: visible !important; }
+    #navbar.global-actions .navbar-nav > li:last-child {
+        display: block !important;
+        float: none;
+    }
+    #navbar.global-actions .navbar-nav > li:last-child .userName {
+        display: inline-block;
+        padding: 10px 10px;
+        font-size: 20px;
+    }
+    #navbar.global-actions .navbar-nav > li:last-child .userName .link-text-xs-only { display: none; }
+
+    /* ---------- Hide the left filters panel on Calendar, Contacts, Potentials ---------- */
+    .main-container-Calendar #sidebar-essentials,
+    .main-container-Contacts #sidebar-essentials,
+    .main-container-Potentials #sidebar-essentials,
+    .main-container-Calendar .essentials-toggle,
+    .main-container-Contacts .essentials-toggle,
+    .main-container-Potentials .essentials-toggle { display: none !important; }
+    .main-container-Calendar .content-area,
+    .main-container-Contacts .content-area,
+    .main-container-Potentials .content-area { width: 100% !important; }
+
+    /* ---------- Calendar Day view: remove the hour/time axis column ---------- */
+    .fc-agenda-view .fc-axis { display: none !important; }
+
+    /* ---------- Calendar: inline "Mark as Held" check icon on events ---------- */
+    .calendar-markasheld { margin-left: 5px; }
+    .calendar-markasheld i { font-size: 14px; vertical-align: middle; }
+    .calendar-markasheld.held i { color: #22c55e; }                  /* solid green = held */
+    .calendar-markasheld.planned i { color: rgba(255, 255, 255, 0.95); } /* empty check on colored event */
+}

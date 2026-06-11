@@ -24,7 +24,7 @@
 		<div class="modal-dialog">
 		</div>
 	</div>
-	<div class="main-container">
+	<div class="main-container main-container-Calendar">
 		{assign var=LEFTPANELHIDE value=$CURRENT_USER_MODEL->get('leftpanelhide')}
 		<div id="modnavigator" class="module-nav calendar-navigator clearfix">
 			<div class="hidden-xs hidden-sm mod-switcher-container">

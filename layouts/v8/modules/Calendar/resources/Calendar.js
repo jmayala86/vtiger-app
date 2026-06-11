@@ -1550,7 +1550,38 @@ Vtiger.Class("Calendar_Calendar_Js", {
 	performPreEventRenderActions: function (event, element) {
 		var calendarView = this.getCalendarViewContainer().fullCalendar('getView');
 		this.addActivityTypeIcons(event, element);
-		this.registerPopoverEvent(event, element, calendarView);
+		// On mobile the hover tooltip/popover is unusable, so we skip it and
+		// instead render an inline "Mark as Held" check icon on the event.
+		if (this.isMobileView()) {
+			this.addMarkAsHeldIcon(event, element);
+		} else {
+			this.registerPopoverEvent(event, element, calendarView);
+		}
+	},
+	isMobileView: function () {
+		return !!(window.matchMedia && window.matchMedia('(max-width: 767px)').matches);
+	},
+	addMarkAsHeldIcon: function (event, element) {
+		var sourceModule = event.module || 'Calendar';
+		if (sourceModule !== 'Calendar' && sourceModule !== 'Events') {
+			return;
+		}
+		var iconHtml = '';
+		if (event.status === 'Held') {
+			// Already held: solid green check (no action).
+			iconHtml = '<span class="calendar-markasheld held" title="' + app.vtranslate('JS_MARK_AS_HELD') + '">' +
+					'<i class="fa fa-check-circle"></i></span>';
+		} else if (event.status !== 'Completed') {
+			// Planned: empty check that marks the activity as held when tapped.
+			iconHtml = '<span class="calendar-markasheld planned cursorPointer" ' +
+					'onclick="event.stopPropagation();Calendar_Calendar_Js.markAsHeld(\'' + event.id + '\');" ' +
+					'title="' + app.vtranslate('JS_MARK_AS_HELD') + '">' +
+					'<i class="fa fa-check-circle-o"></i></span>';
+		}
+		if (iconHtml) {
+			var content = element.find('.fc-content');
+			(content.length ? content : element).append(iconHtml);
+		}
 	},
 	performMouseOutActions: function (event, jsEvent, view) {
 //var currentTarget = jQuery(jsEvent.currentTarget);
@@ -1569,6 +1600,10 @@ Vtiger.Class("Calendar_Calendar_Js", {
 		return jQuery(window).height() * portion;
 	},
 	getDefaultCalendarView: function () {
+		// Mobile (v8): always open the Day view regardless of the saved preference.
+		if (window.matchMedia && window.matchMedia('(max-width: 767px)').matches) {
+			return 'agendaDay';
+		}
 		var userDefaultActivityView = this.getUserPrefered('activity_view');
 		if (userDefaultActivityView === 'Today') {
 			userDefaultActivityView = 'agendaDay';
