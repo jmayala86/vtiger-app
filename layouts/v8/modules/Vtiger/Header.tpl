@@ -15,19 +15,19 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-		<link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v7/lib/todc/css/bootstrap.min.css")}'>
-		<link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v7/lib/todc/css/docs.min.css")}'>
-		<link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v7/lib/todc/css/todc-bootstrap.min.css")}'>
-		<link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v7/lib/font-awesome/css/font-awesome.min.css")}'>
-        <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v7/lib/jquery/select2/select2.css")}'>
-        <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v7/lib/select2-bootstrap/select2-bootstrap.css")}'>
+		<link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v8/lib/todc/css/bootstrap.min.css")}'>
+		<link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v8/lib/todc/css/docs.min.css")}'>
+		<link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v8/lib/todc/css/todc-bootstrap.min.css")}'>
+		<link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v8/lib/font-awesome/css/font-awesome.min.css")}'>
+        <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v8/lib/jquery/select2/select2.css")}'>
+        <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v8/lib/select2-bootstrap/select2-bootstrap.css")}'>
         <link type='text/css' rel='stylesheet' href='{vresource_url("libraries/bootstrap/js/eternicode-bootstrap-datepicker/css/datepicker3.css")}'>
-        <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v7/lib/jquery/jquery-ui-1.12.0.custom/jquery-ui.css")}'>
-        <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v7/lib/vt-icons/style.css")}'>
-        <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v7/lib/animate/animate.min.css")}'>
-        <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v7/lib/jquery/malihu-custom-scrollbar/jquery.mCustomScrollbar.css")}'>
-        <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v7/lib/jquery/jquery.qtip.custom/jquery.qtip.css")}'>
-        <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v7/lib/jquery/daterangepicker/daterangepicker.css")}'>
+        <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v8/lib/jquery/jquery-ui-1.12.0.custom/jquery-ui.css")}'>
+        <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v8/lib/vt-icons/style.css")}'>
+        <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v8/lib/animate/animate.min.css")}'>
+        <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v8/lib/jquery/malihu-custom-scrollbar/jquery.mCustomScrollbar.css")}'>
+        <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v8/lib/jquery/jquery.qtip.custom/jquery.qtip.css")}'>
+        <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v8/lib/jquery/daterangepicker/daterangepicker.css")}'>
         <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v8/resources/mobile-nav.css")}'>
 
         <input type="hidden" id="inventoryModules" value={ZEND_JSON::encode($INVENTORY_MODULES)}>
@@ -53,8 +53,8 @@
 		}
 		</style>
 		<script type="text/javascript">var __pageCreationTime = (new Date()).getTime();</script>
-		<script src="{vresource_url('layouts/v7/lib/jquery/jquery.min.js')}"></script>
-		<script src="{vresource_url('layouts/v7/lib/jquery/jquery-migrate-1.4.1.js')}"></script>
+		<script src="{vresource_url('layouts/v8/lib/jquery/jquery.min.js')}"></script>
+		<script src="{vresource_url('layouts/v8/lib/jquery/jquery-migrate-1.4.1.js')}"></script>
 		<script type="text/javascript">
 			var _META = { 'module': "{$MODULE}", view: "{$VIEW}", 'parent': "{$PARENT_MODULE}", 'notifier':"{$NOTIFIER_URL}", 'app':"{$SELECTED_MENU_CATEGORY}" };
             {if $EXTENSION_MODULE}
