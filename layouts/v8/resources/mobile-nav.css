@@ -1,0 +1,75 @@
+/**********************************************************************************
+ * Mobile bottom navigation bar (app-like)
+ * Only visible on mobile devices (phones). It is completely hidden on
+ * tablet/desktop viewports so the existing front-end is not affected.
+ **********************************************************************************/
+
+/* Hidden by default (desktop / tablet). Shown only on phones below. */
+.mobile-bottom-nav {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1040; /* above content, below modal backdrops */
+        height: 56px;
+        background: #2c3b49;
+        border-top: 1px solid #1f2a35;
+        box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.25);
+        /* Respect iOS home-indicator safe area */
+        padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+
+    .mobile-bottom-nav .mobile-nav-item {
+        flex: 1 1 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #b6c2cd;
+        text-decoration: none;
+        font-size: 11px;
+        line-height: 1.2;
+        padding: 6px 2px;
+        -webkit-tap-highlight-color: transparent;
+        transition: color 0.2s ease, background 0.2s ease;
+    }
+
+    .mobile-bottom-nav .mobile-nav-item .mobile-nav-icon {
+        font-size: 20px;
+        margin-bottom: 3px;
+        display: block;
+    }
+
+    .mobile-bottom-nav .mobile-nav-item .mobile-nav-label {
+        display: block;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .mobile-bottom-nav .mobile-nav-item:hover,
+    .mobile-bottom-nav .mobile-nav-item:focus,
+    .mobile-bottom-nav .mobile-nav-item:active {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .mobile-bottom-nav .mobile-nav-item.active {
+        color: #3cb878;
+        background: rgba(60, 184, 120, 0.12);
+    }
+
+    /* Prevent the fixed bar from hiding page content / footer on mobile */
+    body.has-mobile-bottom-nav #page {
+        padding-bottom: 56px;
+        padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+    }
+}

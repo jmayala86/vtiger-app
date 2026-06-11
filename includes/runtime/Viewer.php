@@ -103,6 +103,12 @@ class Vtiger_Viewer extends SmartyBC {
 	 * @return <String> - Default Layout Name
 	 */
 	public static function getDefaultLayoutName(){
+        // Honor the layout configured in config.inc.php ($default_layout) when present,
+        // falling back to the built-in default. This keeps layout selection config-driven.
+        global $default_layout;
+        if (!empty($default_layout)) {
+            return $default_layout;
+        }
         return self::DEFAULTLAYOUT;
 	}
 
