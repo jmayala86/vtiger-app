@@ -207,7 +207,16 @@ h1, h2, h3, h4, h5 { color: var(--v8-text); }
     border-top-right-radius: var(--v8-radius);
     border-bottom: 1px solid var(--v8-border);
     font-weight: 600;
+    /* Replace the legacy dark/gradient header with a clean light surface */
+    background: var(--v8-surface-alt) !important;
+    background-image: none !important;
+    color: var(--v8-text) !important;
+    box-shadow: none !important;
 }
+.blockHeader a,
+.blockHeader span,
+.dashboardWidgetHeader a,
+.widget-header a { color: var(--v8-text) !important; }
 
 /* ============================== Buttons ============================== */
 .btn {
@@ -377,9 +386,34 @@ select.form-control {
     .global-actions .navbar-nav > li > a,
     .global-actions .navbar-nav > li > div > a { padding: 10px 12px; }
 
-    /* Module action bar wraps gracefully */
-    .module-action-bar { height: auto; padding: 6px 4px; }
-    .module-action-bar .module-title { margin: 6px 12px; font-size: 16px; }
+    /* Keep the search as a single-line, contained pill on phones */
+    .search-link {
+        display: flex;
+        align-items: center;
+        height: 42px;
+        margin: 8px 12px;
+        padding: 0 14px;
+    }
+    .search-link .fa-search { flex: 0 0 auto; }
+    .search-link .keyword-input {
+        flex: 1 1 auto;
+        width: auto;
+        height: 38px;
+        margin: 0 6px;
+    }
+    .search-link .adv-search { flex: 0 0 auto; }
+
+    /* Module action bar: stack the title above the actions so they never overlap */
+    .module-action-bar { display: block; height: auto; padding: 6px 0; }
+    .module-action-bar .module-title { display: block; margin: 6px 12px; font-size: 16px; }
+    .module-buttons-container {
+        float: none !important;
+        margin: 0 12px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .module-buttons-container .btn { margin: 0; flex: 0 0 auto; }
 
     /* Cards span full width with tighter gutters */
     .summary-widget-container,
@@ -394,8 +428,6 @@ select.form-control {
     .table-container { border-radius: var(--v8-radius-sm); }
     .listview-table > tbody > tr > td { padding: 12px 8px; }
     .listview-actions-container { padding-top: 8px; }
-    .module-buttons-container { float: none; margin: 6px 0; }
-    .module-buttons-container .btn { margin-bottom: 4px; }
 
     /* Detail view fields stack instead of two-column cramming */
     .detailViewInfo .fieldRow > [class*="col-"] { width: 100%; float: none; }
