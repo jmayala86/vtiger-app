@@ -265,6 +265,9 @@
  * ===================================================================== */
 @media (max-width: 767px) {
 
+    /* ---------- Hide the module action/title bar (.app-nav) on all modules ---------- */
+    .app-nav { display: none !important; }
+
     /* ---------- Simplified top navbar: only brand + user ---------- */
     /* Hide the app-switcher hamburger (mobile navigation = bottom nav bar) */
     #appnavigator,
