@@ -1,0 +1,409 @@
+/**********************************************************************************
+ * v8 Modern Theme — responsive design-system overlay
+ * --------------------------------------------------------------------------------
+ * A presentation-only modernization layer for the v8 layout, inspired by the
+ * clean app shells of Asana, Monday and Slack. It is loaded AFTER the skin and
+ * module stylesheets so it can refine look & feel without touching markup,
+ * JavaScript hooks or business logic. It is fully responsive for desktop,
+ * tablet and mobile.
+ *
+ * Strategy:
+ *   - Establish design tokens via CSS custom properties.
+ *   - Restyle the existing structural classes (topbar, sidebar, list view,
+ *     detail view, buttons, forms, cards) rather than re-structuring the DOM.
+ *   - Add fluid/responsive behavior (no fixed-width tables, stacking on small
+ *     viewports, comfortable touch targets).
+ **********************************************************************************/
+
+/* ============================== Design tokens ============================== */
+:root {
+    /* Brand / accent */
+    --v8-primary:        #4f5bd5;   /* indigo */
+    --v8-primary-hover:  #3f49bf;
+    --v8-primary-soft:   #eef0fb;
+    --v8-accent:         #2bb79b;   /* teal accent for success/positive */
+
+    /* Neutrals */
+    --v8-bg:             #f4f6f9;   /* app background */
+    --v8-surface:        #ffffff;   /* cards, panels */
+    --v8-surface-alt:    #fafbfc;
+    --v8-border:         #e6e9ee;
+    --v8-border-strong:  #d6dbe3;
+
+    /* Text */
+    --v8-text:           #1f2733;
+    --v8-text-muted:     #6b7686;
+    --v8-text-faint:     #9aa4b2;
+
+    /* Sidebar (Slack-like deep slate) */
+    --v8-sidebar-bg:     #1f2733;
+    --v8-sidebar-bg-2:   #2a3442;
+    --v8-sidebar-text:   #c3cbd6;
+    --v8-sidebar-active: #4f5bd5;
+
+    /* Effects */
+    --v8-radius:         10px;
+    --v8-radius-sm:      7px;
+    --v8-shadow-sm:      0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.08);
+    --v8-shadow-md:      0 4px 12px rgba(16, 24, 40, 0.10);
+    --v8-shadow-lg:      0 12px 32px rgba(16, 24, 40, 0.16);
+
+    --v8-font: "Inter", "Lato", "Open-sans", -apple-system, BlinkMacSystemFont,
+               "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ============================== Base / typography ============================== */
+body {
+    font-family: var(--v8-font) !important;
+    background: var(--v8-bg) !important;
+    color: var(--v8-text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: var(--v8-primary); }
+a:hover, a:focus { color: var(--v8-primary-hover); }
+
+h1, h2, h3, h4, h5 { color: var(--v8-text); }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: #c7cdd6; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: #aeb6c2; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* ============================== Top navigation bar ============================== */
+.app-fixed-navbar,
+.navbar.app-fixed-navbar {
+    background: var(--v8-surface) !important;
+    border-bottom: 1px solid var(--v8-border) !important;
+    box-shadow: var(--v8-shadow-sm);
+}
+
+.global-nav .logo-container,
+.global-nav .search-links-container {
+    border-bottom: 0 !important;
+}
+
+.company-logo img { object-fit: contain; }
+
+/* App switcher (hamburger) */
+#appnavigator .app-icon {
+    color: var(--v8-text-muted);
+    transition: color 0.15s ease;
+}
+#appnavigator:hover .app-icon { color: var(--v8-primary); }
+
+/* Global search — rounded pill */
+.search-link {
+    border-bottom: 0 !important;
+    background: var(--v8-surface-alt);
+    border: 1px solid var(--v8-border);
+    border-radius: 999px;
+    padding: 4px 14px;
+    margin-top: 9px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.search-link:focus-within {
+    border-color: var(--v8-primary);
+    box-shadow: 0 0 0 3px var(--v8-primary-soft);
+}
+.search-link .keyword-input { background: transparent; }
+.search-link .keyword-input::placeholder { color: var(--v8-text-faint); }
+
+/* Top-right action icons */
+.global-actions .navbar-nav > li > a,
+.global-actions .navbar-nav > li > div > a {
+    color: var(--v8-text-muted);
+}
+.global-actions .navbar-nav > li > a:hover { color: var(--v8-primary); }
+
+/* Quick-create as a primary pill button */
+.nav > li > a.qc-button {
+    background: var(--v8-primary) !important;
+    color: #fff !important;
+    border-radius: 999px !important;
+    box-shadow: var(--v8-shadow-sm);
+    transition: background 0.15s ease, transform 0.05s ease;
+}
+.nav > li > a.qc-button:hover { background: var(--v8-primary-hover) !important; }
+.nav > li > a.qc-button:active { transform: translateY(1px); }
+
+/* User dropdown card */
+.logout-content {
+    border: 1px solid var(--v8-border);
+    border-radius: var(--v8-radius);
+    box-shadow: var(--v8-shadow-lg);
+}
+
+/* Module action bar (below topbar) */
+.module-action-bar {
+    background: var(--v8-surface);
+    border-top: 1px solid var(--v8-border);
+    border-bottom: 1px solid var(--v8-border);
+}
+.module-action-bar .module-title,
+.active-app-title {
+    color: var(--v8-text);
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+/* ============================== Sidebar / module nav ============================== */
+#sidebar,
+#sidebar .module-nav,
+.module-nav { background: var(--v8-sidebar-bg) !important; }
+
+.module-nav .modules-menu { background: var(--v8-sidebar-bg) !important; }
+.module-nav .module-filters { background: var(--v8-sidebar-bg-2) !important; }
+
+.modules-menu ul li a {
+    color: var(--v8-sidebar-text);
+    border-radius: var(--v8-radius-sm);
+    margin: 2px 6px;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.modules-menu ul li:hover,
+.modules-menu ul li.active {
+    background: transparent;
+}
+.modules-menu ul li:hover a { background: rgba(255, 255, 255, 0.06); color: #fff; }
+.modules-menu ul li.active a { background: var(--v8-sidebar-active); color: #fff; }
+
+.lists-menu > li {
+    border-radius: var(--v8-radius-sm);
+    transition: background 0.12s ease;
+}
+.lists-menu > li:hover,
+.lists-menu > li.active { background: rgba(255, 255, 255, 0.08); }
+.search-list {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: var(--v8-radius-sm);
+}
+.search-list:focus { border-color: var(--v8-primary); }
+
+/* App menu overlay (the big app grid) */
+.app-menu { background: var(--v8-sidebar-bg); border-radius: 0 0 var(--v8-radius) var(--v8-radius); }
+
+/* ============================== Cards / panels / widgets ============================== */
+.summary-widget-container,
+.detail-view-summary,
+.dashboardWidget,
+.widget_contents,
+.cv-block,
+.blockContainer,
+.detailViewInfo .blockContainer,
+.contents-topscroll {
+    background: var(--v8-surface);
+    border: 1px solid var(--v8-border);
+    border-radius: var(--v8-radius);
+    box-shadow: var(--v8-shadow-sm);
+}
+
+.dashboardWidgetHeader,
+.widget-header,
+.blockHeader {
+    border-top-left-radius: var(--v8-radius);
+    border-top-right-radius: var(--v8-radius);
+    border-bottom: 1px solid var(--v8-border);
+    font-weight: 600;
+}
+
+/* ============================== Buttons ============================== */
+.btn {
+    border-radius: var(--v8-radius-sm) !important;
+    font-family: var(--v8-font);
+    font-weight: 600;
+    text-shadow: none !important;
+    box-shadow: none;
+    transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+}
+.btn:active { transform: translateY(1px); }
+
+.btn-primary,
+.btn-success {
+    background: var(--v8-primary) !important;
+    border-color: var(--v8-primary) !important;
+    color: #fff !important;
+}
+.btn-primary:hover,
+.btn-success:hover,
+.btn-primary:focus,
+.btn-success:focus {
+    background: var(--v8-primary-hover) !important;
+    border-color: var(--v8-primary-hover) !important;
+}
+
+.btn-default,
+.module-buttons {
+    background: var(--v8-surface) !important;
+    border: 1px solid var(--v8-border-strong) !important;
+    color: var(--v8-text) !important;
+    box-shadow: var(--v8-shadow-sm);
+}
+.btn-default:hover,
+.module-buttons:hover {
+    background: var(--v8-surface-alt) !important;
+    border-color: #c2c9d4 !important;
+}
+
+/* ============================== Form controls ============================== */
+.form-control,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea,
+select.form-control {
+    border: 1px solid var(--v8-border-strong);
+    border-radius: var(--v8-radius-sm);
+    box-shadow: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.form-control:focus {
+    border-color: var(--v8-primary);
+    box-shadow: 0 0 0 3px var(--v8-primary-soft);
+}
+.select2-container .select2-choice,
+.select2-container--bootstrap .select2-selection {
+    border-radius: var(--v8-radius-sm) !important;
+    border-color: var(--v8-border-strong) !important;
+}
+
+/* ============================== List view ============================== */
+.listview-actions-container {
+    background: transparent;
+    padding-top: 14px;
+}
+.current-filter-name { color: var(--v8-text); font-weight: 700; }
+
+.table-container {
+    border: 1px solid var(--v8-border);
+    border-radius: var(--v8-radius);
+    box-shadow: var(--v8-shadow-sm);
+    background: var(--v8-surface);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Remove the rigid 2430px min-width so the grid is fluid; it still scrolls
+   horizontally when there are many columns, but never forces overflow on
+   narrow screens with few columns. */
+.listview-table {
+    min-width: 0 !important;
+    table-layout: auto;
+    background: var(--v8-surface);
+}
+.listview-table > thead > tr > th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--v8-surface-alt);
+    color: var(--v8-text-muted);
+    font-weight: 600;
+    border-bottom: 1px solid var(--v8-border) !important;
+    white-space: nowrap;
+}
+.listview-table > tbody > tr { transition: background 0.1s ease; }
+.listview-table > tbody > tr:hover { background: var(--v8-primary-soft) !important; }
+.listview-table > tbody > tr > td {
+    color: var(--v8-text);
+    border-top: 1px solid var(--v8-border) !important;
+    vertical-align: middle;
+}
+
+.listview-pagination i { color: var(--v8-text-muted); }
+.listview-pagination i:hover { color: var(--v8-primary); }
+
+/* ============================== Detail view ============================== */
+.detailViewTitle,
+.recordLabel {
+    color: var(--v8-text);
+    font-weight: 700;
+}
+.detailViewInfo .fieldValue,
+.value { color: var(--v8-text); }
+.detailViewInfo .fieldLabel,
+.fieldLabel { color: var(--v8-text-muted); }
+
+/* ============================== Footer ============================== */
+.app-footer {
+    background: transparent;
+    color: var(--v8-text-faint);
+    border-top: 1px solid var(--v8-border);
+}
+.app-footer a { color: var(--v8-text-muted); }
+
+/* ============================== Tabs / pills ============================== */
+.nav-tabs { border-bottom: 1px solid var(--v8-border); }
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+    border: 0;
+    border-bottom: 2px solid var(--v8-primary);
+    color: var(--v8-primary);
+    background: transparent;
+    font-weight: 600;
+}
+.nav-tabs > li > a {
+    border: 0;
+    color: var(--v8-text-muted);
+}
+.nav-tabs > li > a:hover { background: transparent; color: var(--v8-text); }
+
+/* ============================== Modals ============================== */
+.modal-content {
+    border: 0;
+    border-radius: var(--v8-radius);
+    box-shadow: var(--v8-shadow-lg);
+}
+.modal-header { border-bottom: 1px solid var(--v8-border); }
+.modal-footer { border-top: 1px solid var(--v8-border); }
+
+/* ============================== Responsive: tablet ============================== */
+@media (max-width: 991px) {
+    .global-nav .logo-container { border-bottom: 0 !important; }
+    .search-link { width: 100%; }
+    .search-link .keyword-input { width: 100%; }
+    /* Let the content use the full width when the sidebar collapses */
+    .main-container .content-area,
+    #content-wrapper { width: 100% !important; }
+}
+
+/* ============================== Responsive: mobile ============================== */
+@media (max-width: 767px) {
+    /* Comfortable tap targets in the topbar */
+    .navbar-header .navbar-toggle { padding: 8px 10px; }
+    .global-actions .navbar-nav > li > a,
+    .global-actions .navbar-nav > li > div > a { padding: 10px 12px; }
+
+    /* Module action bar wraps gracefully */
+    .module-action-bar { height: auto; padding: 6px 4px; }
+    .module-action-bar .module-title { margin: 6px 12px; font-size: 16px; }
+
+    /* Cards span full width with tighter gutters */
+    .summary-widget-container,
+    .blockContainer,
+    .dashboardWidget {
+        border-radius: var(--v8-radius-sm);
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    /* List view: cards/scroll friendly, larger touch rows */
+    .table-container { border-radius: var(--v8-radius-sm); }
+    .listview-table > tbody > tr > td { padding: 12px 8px; }
+    .listview-actions-container { padding-top: 8px; }
+    .module-buttons-container { float: none; margin: 6px 0; }
+    .module-buttons-container .btn { margin-bottom: 4px; }
+
+    /* Detail view fields stack instead of two-column cramming */
+    .detailViewInfo .fieldRow > [class*="col-"] { width: 100%; float: none; }
+
+    /* Forms: full-width fields */
+    .form-control { font-size: 16px; } /* prevents iOS zoom-on-focus */
+
+    /* Hide the desktop footer text on phones to give content room;
+       the mobile bottom navigation bar is the primary chrome there. */
+    .app-footer { display: none; }
+}
