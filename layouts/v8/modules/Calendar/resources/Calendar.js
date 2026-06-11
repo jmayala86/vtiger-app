@@ -1566,22 +1566,32 @@ Vtiger.Class("Calendar_Calendar_Js", {
 		if (sourceModule !== 'Calendar' && sourceModule !== 'Events') {
 			return;
 		}
-		var iconHtml = '';
+		var icon;
 		if (event.status === 'Held') {
 			// Already held: solid green check (no action).
-			iconHtml = '<span class="calendar-markasheld held" title="' + app.vtranslate('JS_MARK_AS_HELD') + '">' +
-					'<i class="fa fa-check-circle"></i></span>';
+			icon = jQuery('<span class="calendar-markasheld held" title="' +
+					app.vtranslate('JS_MARK_AS_HELD') + '"><i class="fa fa-check-circle"></i></span>');
 		} else if (event.status !== 'Completed') {
 			// Planned: empty check that marks the activity as held when tapped.
-			iconHtml = '<span class="calendar-markasheld planned cursorPointer" ' +
-					'onclick="event.stopPropagation();Calendar_Calendar_Js.markAsHeld(\'' + event.id + '\');" ' +
-					'title="' + app.vtranslate('JS_MARK_AS_HELD') + '">' +
-					'<i class="fa fa-check-circle-o"></i></span>';
+			var thisInstance = this;
+			var recordId = event.id;
+			icon = jQuery('<span class="calendar-markasheld planned cursorPointer" title="' +
+					app.vtranslate('JS_MARK_AS_HELD') + '"><i class="fa fa-check-circle-o"></i></span>');
+			// FullCalendar binds delegated touchstart/touchend/mousedown/click
+			// handlers on the grid to open the event. Stop propagation for ALL of
+			// them on the icon so tapping the check never reaches the event segment.
+			icon.on('mousedown touchstart touchend click', function (e) {
+				e.stopPropagation();
+			});
+			icon.on('click', function (e) {
+				e.preventDefault();
+				thisInstance.markAsHeld(recordId);
+			});
+		} else {
+			return;
 		}
-		if (iconHtml) {
-			var content = element.find('.fc-content');
-			(content.length ? content : element).append(iconHtml);
-		}
+		var content = element.find('.fc-content');
+		(content.length ? content : element).append(icon);
 	},
 	performMouseOutActions: function (event, jsEvent, view) {
 //var currentTarget = jQuery(jsEvent.currentTarget);
