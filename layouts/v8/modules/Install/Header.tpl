@@ -16,13 +16,13 @@
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-			<link type='text/css' rel='stylesheet' href='layouts/v7/lib/todc/css/bootstrap.min.css'/>
-			<link type='text/css' rel='stylesheet' href='layouts/v7/lib/todc/css/todc-bootstrap.min.css'/>
-			<link type='text/css' rel='stylesheet' href='layouts/v7/lib/font-awesome/css/font-awesome.min.css'/>
-			<link type='text/css' rel='stylesheet' href='layouts/v7/lib/jquery/select2/select2.css'/>
+			<link type='text/css' rel='stylesheet' href='layouts/v8/lib/todc/css/bootstrap.min.css'/>
+			<link type='text/css' rel='stylesheet' href='layouts/v8/lib/todc/css/todc-bootstrap.min.css'/>
+			<link type='text/css' rel='stylesheet' href='layouts/v8/lib/font-awesome/css/font-awesome.min.css'/>
+			<link type='text/css' rel='stylesheet' href='layouts/v8/lib/jquery/select2/select2.css'/>
 			<link type='text/css' rel='stylesheet' href='libraries/bootstrap/js/eternicode-bootstrap-datepicker/css/datepicker3.css'/>
-			<link type='text/css' rel='stylesheet' href='layouts/v7/lib/jquery/jquery-ui-1.12.0.custom/jquery-ui.css'/>
-			<link type='text/css' rel='stylesheet' href='layouts/v7/lib/vt-icons/style.css'/>
+			<link type='text/css' rel='stylesheet' href='layouts/v8/lib/jquery/jquery-ui-1.12.0.custom/jquery-ui.css'/>
+			<link type='text/css' rel='stylesheet' href='layouts/v8/lib/vt-icons/style.css'/>
 
 			{if strpos($V7_THEME_PATH,".less")!== false}
 				<link type="text/css" rel="stylesheet/less" href="{vresource_url($V7_THEME_PATH)}" media="screen" />
@@ -41,7 +41,7 @@
 			}
 			</style>
 
-			<script src="{vresource_url('layouts/v7/lib/jquery/jquery.min.js')}"></script>
+			<script src="{vresource_url('layouts/v8/lib/jquery/jquery.min.js')}"></script>
 			<script type="text/javascript">
 				var _META = { 'module': "{$MODULE}", view: "{$VIEW}", 'parent': "{$PARENT_MODULE}" };
 				{if $EXTENSION_MODULE}
