@@ -45,6 +45,7 @@
 
         {* v8 modern theme overlay — loaded last so it refines the skin & module styles *}
         <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v8/resources/modern.css")}'>
+        <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v8/resources/modern-responsive.css")}'>
 
 		{* For making pages - print friendly *}
 		<style type="text/css">

@@ -1,0 +1,260 @@
+/**********************************************************************************
+ * v8 Deep Responsive Layer
+ * --------------------------------------------------------------------------------
+ * Structural responsive behavior layered on top of modern.css:
+ *   WS1 — List view becomes cards on mobile (uses the data-label added to each
+ *         <td class="listViewEntryValue">; no JS, no DOM restructuring).
+ *   WS2 — Modern navigation: cleaner desktop module rail + the existing app
+ *         switcher (#app-menu, toggled by existing JS) restyled as a left
+ *         off-canvas drawer on mobile.
+ *   WS3 — Detail & edit views: card-style sections everywhere, single-column
+ *         (label-over-value) on mobile.
+ *
+ * Loaded after modern.css. Presentation only — JS hooks (ids/classes/data-*)
+ * are preserved.
+ **********************************************************************************/
+
+/* =====================================================================
+ * WS3 — Detail & edit: card-style sections (all viewports)
+ * ===================================================================== */
+.detailViewInfo .block,
+.detailViewContainer .block {
+    background: var(--v8-surface);
+    border: 1px solid var(--v8-border);
+    border-radius: var(--v8-radius);
+    box-shadow: var(--v8-shadow-sm);
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+.detailViewInfo .block .blockHeader,
+.detailViewContainer .block .blockHeader {
+    padding: 12px 16px;
+    margin: 0;
+}
+.detailViewInfo .block .blockData,
+.detailViewContainer .block .blockData {
+    padding: 6px 16px 14px;
+}
+.detailview-table.no-border,
+.detailview-table { background: transparent; }
+.detailview-table > tbody > tr > td.fieldValue .value { color: var(--v8-text); }
+.detailview-table > tbody > tr > td.fieldLabel .muted,
+.detailview-table > tbody > tr > td.fieldLabel { color: var(--v8-text-muted); }
+
+/* Comfortable, readable edit form column on desktop */
+@media (min-width: 768px) {
+    .editViewContents { max-width: 920px; }
+}
+
+/* =====================================================================
+ * WS2 — Desktop module rail polish
+ * ===================================================================== */
+@media (min-width: 768px) {
+    .module-nav .mod-switcher-container {
+        background: var(--v8-sidebar-bg);
+    }
+    /* The app switcher grid: modern dark panel with rounded tiles */
+    #app-menu.app-menu .menu-item.app-item {
+        border-radius: var(--v8-radius);
+        transition: transform 0.12s ease, background 0.12s ease;
+    }
+    #app-menu.app-menu .menu-item.app-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+    }
+}
+
+/* =====================================================================
+ * Mobile (phones)
+ * ===================================================================== */
+@media (max-width: 767px) {
+
+    /* ---------- WS1: List view → cards ---------- */
+    /* Let cards flow instead of a horizontally scrolling spreadsheet */
+    #table-content.table-container,
+    .table-container {
+        overflow-x: visible;
+        border: 0;
+        box-shadow: none;
+        background: transparent;
+        border-radius: 0;
+    }
+    /* Hide the column header row (and inline quick-search row) on phones */
+    #listview-table > thead,
+    .listview-table > thead { display: none; }
+
+    #listview-table,
+    .listview-table,
+    #listview-table > tbody,
+    .listview-table > tbody { display: block; width: 100%; min-width: 0; }
+
+    /* Each record row becomes a card */
+    #listview-table > tbody > tr.listViewEntries,
+    .listview-table > tbody > tr.listViewEntries {
+        display: block;
+        position: relative;
+        background: var(--v8-surface);
+        border: 1px solid var(--v8-border);
+        border-radius: var(--v8-radius);
+        box-shadow: var(--v8-shadow-sm);
+        margin: 0 0 12px;
+        padding: 10px 14px 12px;
+    }
+    #listview-table > tbody > tr.listViewEntries:hover,
+    .listview-table > tbody > tr.listViewEntries:hover {
+        background: var(--v8-surface) !important;
+    }
+
+    /* The actions/checkbox cell sits as a compact header strip in the card */
+    #listview-table > tbody > tr > td.listViewRecordActions,
+    .listview-table > tbody > tr > td.listViewRecordActions {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        border: 0 !important;
+        padding: 0 0 6px;
+        width: 100%;
+    }
+
+    /* Each value cell: label on the left, value on the right */
+    #listview-table > tbody > tr > td.listViewEntryValue,
+    .listview-table > tbody > tr > td.listViewEntryValue {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 14px;
+        width: 100%;
+        border: 0 !important;
+        border-top: 1px solid var(--v8-surface-alt) !important;
+        padding: 8px 0 !important;
+        white-space: normal;
+    }
+    #listview-table > tbody > tr > td.listViewEntryValue:first-of-type,
+    .listview-table > tbody > tr > td.listViewEntryValue:first-of-type { border-top: 0 !important; }
+
+    #listview-table > tbody > tr > td.listViewEntryValue::before,
+    .listview-table > tbody > tr > td.listViewEntryValue::before {
+        content: attr(data-label);
+        flex: 0 0 42%;
+        color: var(--v8-text-muted);
+        font-weight: 600;
+        font-size: 11px;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        line-height: 1.5;
+    }
+    #listview-table > tbody > tr > td.listViewEntryValue .fieldValue,
+    #listview-table > tbody > tr > td.listViewEntryValue .value,
+    .listview-table > tbody > tr > td.listViewEntryValue .fieldValue,
+    .listview-table > tbody > tr > td.listViewEntryValue .value {
+        text-align: right;
+        word-break: break-word;
+        white-space: normal;
+        color: var(--v8-text);
+    }
+    /* Hide the bottom horizontal scrollbar helper (not needed for cards) */
+    .bottom-fixed-scroll { display: none !important; }
+
+    /* ---------- WS2: App switcher → left off-canvas drawer ----------
+       NOTE: the existing JS toggles visibility with .show()/.hide() and injects
+       inline width/max-width. We override the geometry with !important so the
+       drawer is full-height and comfortably wide, WITHOUT touching `display`
+       (so the JS open/close toggle keeps working). */
+    #app-menu.app-menu {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+        height: 100% !important;
+        width: 84% !important;
+        max-width: 320px !important;
+        padding: 8px 0 80px;
+        border-radius: 0;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        box-shadow: var(--v8-shadow-lg);
+    }
+    /* App tiles become vertical list rows in the drawer */
+    #app-menu.app-menu .app-list,
+    #app-menu.app-menu .app-list.row { display: block; margin: 0; }
+    #app-menu.app-menu .menu-item.app-item {
+        display: block;
+        width: 100%;
+        padding: 14px 18px;
+        margin: 0;
+        text-align: left;
+        font-size: 15px;
+        border-radius: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    #app-menu.app-menu .menu-item.app-item:hover div { transform: none; }
+    #app-menu.app-menu .menu-items-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    #app-menu.app-menu .app-icon-list,
+    #app-menu.app-menu .app-item .fa {
+        font-size: 20px;
+        width: 26px;
+        text-align: center;
+        transform: none !important;
+    }
+    #app-menu.app-menu .app-name { font-size: 15px; }
+    /* The drawer's own header/close toggle */
+    #app-menu.app-menu .app-switcher-container { padding: 12px 18px; }
+
+    /* ---------- WS2: filters panel stacks full-width ---------- */
+    .main-container .sidebar-essentials,
+    .main-container .content-area,
+    #listViewContent.content-area { width: 100% !important; float: none !important; }
+    .main-container .sidebar-essentials { margin-bottom: 12px; }
+
+    /* ---------- WS3: Detail & edit → single column ---------- */
+    .detailview-table,
+    .detailview-table > tbody,
+    .detailview-table > tbody > tr { display: block; width: 100%; }
+    .detailview-table > tbody > tr > td.fieldLabel {
+        display: block;
+        width: 100% !important;
+        padding: 10px 0 2px !important;
+        border: 0 !important;
+        text-align: left !important;
+        color: var(--v8-text-muted);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+    }
+    .detailview-table > tbody > tr > td.fieldValue {
+        display: block;
+        width: 100% !important;
+        padding: 0 0 10px !important;
+        border: 0 !important;
+        border-bottom: 1px solid var(--v8-surface-alt) !important;
+        text-align: left !important;
+    }
+
+    .editViewContents .table-borderless,
+    .editViewContents .table-borderless > tbody,
+    .editViewContents .table-borderless > tbody > tr { display: block; width: 100%; }
+    .editViewContents .table-borderless > tbody > tr > td.fieldLabel {
+        display: block;
+        width: 100% !important;
+        padding: 12px 0 4px !important;
+        text-align: left !important;
+        border: 0 !important;
+        color: var(--v8-text-muted);
+        font-weight: 600;
+    }
+    .editViewContents .table-borderless > tbody > tr > td.fieldValue,
+    .editViewContents .table-borderless > tbody > tr > td[class*="fieldValue"] {
+        display: block;
+        width: 100% !important;
+        padding: 0 0 8px !important;
+        border: 0 !important;
+    }
+    .editViewContents .table-borderless > tbody > tr > td.fieldValue .form-control,
+    .editViewContents .table-borderless > tbody > tr > td[class*="fieldValue"] .select2-container {
+        width: 100% !important;
+    }
+}
