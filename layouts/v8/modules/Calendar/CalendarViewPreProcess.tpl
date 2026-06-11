@@ -11,7 +11,7 @@
 -->*}
 {include file="modules/Vtiger/partials/Topbar.tpl"}
 {strip}
-<div class="container-fluid app-nav">
+<div class="container-fluid app-nav hidden-xs">
 	<div class="row">
 		{include file="modules/Calendar/partials/SidebarHeader.tpl"}
 		{include file="CalendarHeader.tpl"|vtemplate_path:$MODULE}
