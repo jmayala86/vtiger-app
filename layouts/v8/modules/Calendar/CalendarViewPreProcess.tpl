@@ -35,4 +35,6 @@
 			{include file="partials/SidebarEssentials.tpl"|vtemplate_path:$MODULE}
 		</div>
 		<div class="CalendarViewPageDiv content-area {if $LEFTPANELHIDE eq '1'} full-width {/if}" id="CalendarViewContent">
+	{* Mobile-only floating action button to create a new activity *}
+	<a class="mobile-fab" title="{vtranslate('LBL_ADD_EVENT', $MODULE)}" onclick="Calendar_Calendar_Js.showCreateEventModal();"><i class="fa fa-plus"></i></a>
 {/strip}

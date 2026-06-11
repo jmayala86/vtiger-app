@@ -14,6 +14,9 @@
  * are preserved.
  **********************************************************************************/
 
+/* Floating action button is hidden by default; shown only on phones (below). */
+.mobile-fab { display: none; }
+
 /* =====================================================================
  * WS3 — Detail & edit: card-style sections (all viewports)
  * ===================================================================== */
@@ -350,4 +353,132 @@
     .calendar-markasheld i { font-size: 15px; vertical-align: middle; }
     .calendar-markasheld.held i { color: #22c55e; }                  /* solid green = held */
     .calendar-markasheld.planned i { color: rgba(255, 255, 255, 0.95); } /* empty check on colored event */
+
+    /* ---------- Calendar Day list as activity cards (mockup design) ---------- */
+    /* Date navigator toolbar as a clean pill row */
+    .fc-toolbar.fc-header-toolbar {
+        margin: 4px 0 12px;
+        display: flex;
+        align-items: center;
+    }
+    .fc-toolbar .fc-left { order: 1; flex: 0 0 auto; }
+    .fc-toolbar .fc-center { order: 2; flex: 1 1 auto; text-align: center; }
+    .fc-toolbar .fc-right { order: 3; flex: 0 0 auto; }
+    .fc-toolbar .fc-center, .fc-toolbar .fc-left, .fc-toolbar .fc-right { float: none; }
+    .fc-toolbar .fc-center h2 {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--v8-text);
+        text-transform: capitalize;
+        margin: 0;
+        float: none;
+        display: block;
+        text-align: center;
+    }
+    .fc-toolbar .fc-button {
+        background: var(--v8-surface);
+        border: 1px solid var(--v8-border);
+        border-radius: 50%;
+        width: 38px;
+        height: 38px;
+        box-shadow: var(--v8-shadow-sm);
+        color: var(--v8-text-muted);
+        text-shadow: none;
+        padding: 0;
+    }
+    .fc-toolbar .fc-button .fc-icon { top: -1px; }
+
+    /* The list view container: strip FC chrome, let cards float on the bg */
+    .fc-list-view, .fc-list-view.fc-widget-content { border: 0 !important; background: transparent; }
+    .fc-list-table { display: block; }
+    .fc-list-table tbody { display: block; }
+    .fc-list-table tr.fc-list-heading { display: none; }   /* date shown in the toolbar instead */
+    .fc-list-table td { border: 0 !important; padding: 0 !important; }
+    tr.fc-list-item { display: block; background: transparent; }
+    tr.fc-list-item:hover td { background: transparent; }
+    .fc-list-item .agenda-card-cell { display: block; }
+
+    .agenda-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--v8-surface);
+        border: 1px solid var(--v8-border);
+        border-radius: 14px;
+        box-shadow: var(--v8-shadow-sm);
+        padding: 14px;
+        margin-bottom: 12px;
+    }
+    .agenda-card-checkwrap { flex: 0 0 auto; }
+    .agenda-card-check {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #d0d5dd;
+        background: var(--v8-surface);
+        box-sizing: border-box;
+        transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .agenda-card-check.planned:active { background: #f0fdf4; }
+    .agenda-card-check.held {
+        background: #22c55e;
+        border-color: #22c55e;
+    }
+    .agenda-card-check.held i { color: #fff; font-size: 16px; }
+
+    .agenda-card-main { flex: 1 1 auto; min-width: 0; }
+    .agenda-card-title {
+        font-weight: 700;
+        color: var(--v8-text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .agenda-card-meta { color: var(--v8-text-muted); font-size: 13px; margin-top: 3px; }
+    .agenda-card-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 7px;
+        vertical-align: middle;
+    }
+    .agenda-card-type { color: var(--v8-text-faint); font-size: 12px; margin-top: 2px; }
+
+    .agenda-card-badge {
+        flex: 0 0 auto;
+        align-self: flex-start;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: 999px;
+        white-space: nowrap;
+    }
+    .agenda-card-badge.held { color: #15803d; background: #dcfce7; }
+    .agenda-card-badge.planned { color: #1d4ed8; background: #dbeafe; }
+
+    /* ---------- Floating action button (+) ---------- */
+    .mobile-fab {
+        position: fixed;
+        right: 18px;
+        bottom: 74px;                /* clear the bottom nav bar */
+        bottom: calc(74px + env(safe-area-inset-bottom, 0px));
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--v8-primary);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        box-shadow: 0 6px 16px rgba(79, 91, 213, 0.45);
+        z-index: 1045;
+        cursor: pointer;
+    }
+    .mobile-fab:hover, .mobile-fab:focus, .mobile-fab:active { color: #fff; background: var(--v8-primary-hover); }
+    .mobile-fab i { line-height: 1; }
 }

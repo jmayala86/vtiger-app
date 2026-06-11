@@ -1549,6 +1549,11 @@ Vtiger.Class("Calendar_Calendar_Js", {
 	},
 	performPreEventRenderActions: function (event, element) {
 		var calendarView = this.getCalendarViewContainer().fullCalendar('getView');
+		// Mobile day list: render each activity as a card (check + title + time/type + status badge).
+		if (this.isMobileView() && calendarView && calendarView.type === 'listDay') {
+			this.renderMobileAgendaCard(event, element);
+			return;
+		}
 		this.addActivityTypeIcons(event, element);
 		// On mobile the hover tooltip/popover is unusable, so we skip it and
 		// instead render an inline "Mark as Held" check icon on the event.
@@ -1557,6 +1562,48 @@ Vtiger.Class("Calendar_Calendar_Js", {
 		} else {
 			this.registerPopoverEvent(event, element, calendarView);
 		}
+	},
+	renderMobileAgendaCard: function (event, element) {
+		var status = event.status || '';
+		var isHeld = (status === 'Held' || status === 'Completed');
+		var timeText = element.find('.fc-list-item-time').text();
+		var dotColor = element.find('.fc-event-dot').css('background-color') || event.color || '#4f5bd5';
+
+		var card = jQuery(
+			'<td colspan="3" class="agenda-card-cell">' +
+				'<div class="agenda-card">' +
+					'<div class="agenda-card-checkwrap"></div>' +
+					'<div class="agenda-card-main">' +
+						'<div class="agenda-card-title"></div>' +
+						'<div class="agenda-card-meta"><span class="agenda-card-dot"></span><span class="agenda-card-time"></span></div>' +
+						'<div class="agenda-card-type"></div>' +
+					'</div>' +
+					'<div class="agenda-card-badge ' + (isHeld ? 'held' : 'planned') + '"></div>' +
+				'</div>' +
+			'</td>'
+		);
+		// Use .text() for untrusted values to avoid markup injection.
+		card.find('.agenda-card-title').text(event.title || '');
+		card.find('.agenda-card-time').text(timeText);
+		card.find('.agenda-card-type').text(event.activitytype || '');
+		card.find('.agenda-card-badge').text(app.vtranslate(status));
+		card.find('.agenda-card-dot').css('background-color', dotColor);
+
+		var checkEl;
+		if (isHeld) {
+			checkEl = jQuery('<span class="agenda-card-check held" title="' +
+					app.vtranslate('JS_MARK_AS_HELD') + '"><i class="fa fa-check"></i></span>');
+		} else {
+			var thisInstance = this, recordId = event.id;
+			checkEl = jQuery('<span class="agenda-card-check planned cursorPointer" title="' +
+					app.vtranslate('JS_MARK_AS_HELD') + '"></span>');
+			// Keep the tap on the check from bubbling to the row (which opens the detail).
+			checkEl.on('mousedown touchstart touchend click', function (e) { e.stopPropagation(); });
+			checkEl.on('click', function (e) { e.preventDefault(); thisInstance.markAsHeld(recordId); });
+		}
+		card.find('.agenda-card-checkwrap').append(checkEl);
+
+		element.empty().append(card);
 	},
 	isMobileView: function () {
 		return !!(window.matchMedia && window.matchMedia('(max-width: 767px)').matches);
@@ -1610,9 +1657,9 @@ Vtiger.Class("Calendar_Calendar_Js", {
 		return jQuery(window).height() * portion;
 	},
 	getDefaultCalendarView: function () {
-		// Mobile (v8): always open the Day view regardless of the saved preference.
+		// Mobile (v8): use the day Agenda/List view rendered as activity cards.
 		if (window.matchMedia && window.matchMedia('(max-width: 767px)').matches) {
-			return 'agendaDay';
+			return 'listDay';
 		}
 		var userDefaultActivityView = this.getUserPrefered('activity_view');
 		if (userDefaultActivityView === 'Today') {
@@ -1651,7 +1698,11 @@ Vtiger.Class("Calendar_Calendar_Js", {
                 }
             
 		var calenderConfigs = {
-			header: {
+			header: thisInstance.isMobileView() ? {
+				left: 'prev',
+				center: 'title',
+				right: 'next'
+			} : {
 				left: 'month,agendaWeek,agendaDay,vtAgendaList',
 				center: 'title',
 				right: 'today prev,next',
@@ -1673,6 +1724,11 @@ Vtiger.Class("Calendar_Calendar_Js", {
                             },
                             agendaDay: {
                                 columnFormat: 'dddd '+dateFormat
+                            },
+                            listDay: {
+                                titleFormat: 'ddd, D [de] MMM [de] YYYY',
+                                listDayFormat: false,
+                                listDayAltFormat: false
                             }
 			},
 			fixedWeekCount: false,
