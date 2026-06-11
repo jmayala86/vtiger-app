@@ -339,8 +339,15 @@
     .fc-agenda-view .fc-axis { display: none !important; }
 
     /* ---------- Calendar: inline "Mark as Held" check icon on events ---------- */
-    .calendar-markasheld { margin-left: 5px; }
-    .calendar-markasheld i { font-size: 14px; vertical-align: middle; }
+    .calendar-markasheld {
+        position: relative;
+        z-index: 6;               /* sit above the event segment */
+        display: inline-block;
+        margin-left: 5px;
+        padding: 4px 6px;         /* larger, separate tap target */
+        line-height: 1;
+    }
+    .calendar-markasheld i { font-size: 15px; vertical-align: middle; }
     .calendar-markasheld.held i { color: #22c55e; }                  /* solid green = held */
     .calendar-markasheld.planned i { color: rgba(255, 255, 255, 0.95); } /* empty check on colored event */
 }
