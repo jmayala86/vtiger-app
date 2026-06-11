@@ -11,7 +11,7 @@
 {* START YOUR IMPLEMENTATION FROM BELOW. Use {debug} for information *}
 {include file="modules/Vtiger/partials/Topbar.tpl"}
 
-<div class="container-fluid app-nav">
+<div class="container-fluid app-nav hidden-xs">
     <div class="row">
         {include file="modules/Settings/Vtiger/SidebarHeader.tpl"}
         {include file="modules/Settings/Vtiger/ModuleHeader.tpl"}

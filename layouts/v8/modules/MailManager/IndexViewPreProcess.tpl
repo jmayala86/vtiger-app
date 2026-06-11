@@ -9,7 +9,7 @@
 
 {include file="modules/Vtiger/partials/Topbar.tpl"}
 
-<div class="container-fluid app-nav">
+<div class="container-fluid app-nav hidden-xs">
     <div class="row">
         {include file="modules/MailManager/partials/SidebarHeader.tpl"}
         {include file="ModuleHeader.tpl"|vtemplate_path:$MODULE}
