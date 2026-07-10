@@ -71,6 +71,18 @@
  * ===================================================================== */
 @media (max-width: 767px) {
 
+    /* ---------- Page height: only scroll when content overflows ----------
+       The v7 skin forces `.main-container { min-height: calc(100vh - 108px) }`,
+       a value tuned for the desktop navbar + footer. On phones the fixed
+       bottom nav plus #page's top/bottom padding push the document just past
+       the viewport, so even a short list shows a full-page scrollbar over a
+       block of empty space. Drop the artificial minimum on phones: the
+       container grows to its content, so the page scrolls only when the list
+       is genuinely taller than the screen. */
+    .main-container {
+        min-height: 0 !important;
+    }
+
     /* ---------- WS1: List view → cards ---------- */
     /* Let cards flow instead of a horizontally scrolling spreadsheet */
     #table-content.table-container,
