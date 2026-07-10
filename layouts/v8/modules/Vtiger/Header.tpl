@@ -49,6 +49,21 @@
 
         {* App-like cross-document page transitions (mobile only, progressive enhancement) *}
         <link type='text/css' rel='stylesheet' href='{vresource_url("layouts/v8/resources/view-transitions.css")}'>
+        <script type="text/javascript">
+            /* The view transition is a phone-only effect. On tablet/desktop, skip
+               it so the existing navigation behaviour is unchanged. Registered in
+               <head> so it runs before the first paint of the incoming page.
+               Browsers without these events (Firefox, older Safari/Chrome) simply
+               never fire them — harmless. */
+            (function () {
+                var isDesktop = function () { return window.matchMedia('(min-width: 768px)').matches; };
+                var skip = function (e) {
+                    if (e.viewTransition && isDesktop()) { e.viewTransition.skipTransition(); }
+                };
+                window.addEventListener('pageswap', skip);
+                window.addEventListener('pagereveal', skip);
+            })();
+        </script>
 
 		{* For making pages - print friendly *}
 		<style type="text/css">
