@@ -71,6 +71,19 @@
  * ===================================================================== */
 @media (max-width: 767px) {
 
+    /* ---------- Page height: only scroll when content overflows ----------
+       The app skin stylesheet (layouts/v8/skins/<app>/style.css) forces
+       `.main-container { min-height: calc(100vh - 108px) }`, a value tuned for
+       the desktop navbar + footer. On phones the fixed
+       bottom nav plus #page's top/bottom padding push the document just past
+       the viewport, so even a short list shows a full-page scrollbar over a
+       block of empty space. Drop the artificial minimum on phones: the
+       container grows to its content, so the page scrolls only when the list
+       is genuinely taller than the screen. */
+    .main-container {
+        min-height: 0 !important;
+    }
+
     /* ---------- WS1: List view → cards ---------- */
     /* Let cards flow instead of a horizontally scrolling spreadsheet */
     #table-content.table-container,
@@ -104,6 +117,17 @@
     .listview-table,
     #listview-table > tbody,
     .listview-table > tbody { display: block; width: 100%; min-width: 0; }
+
+    /* The table's own white surface would otherwise fill the 12px gaps
+       between the cards; make it transparent so the page background shows
+       through and the cards read as separate. */
+    #listview-table,
+    .listview-table { background: transparent !important; }
+
+    /* Drop the row-separator top border on cells — on cards it just draws
+       stray lines across the content (the base rule sets it !important). */
+    #listview-table > tbody > tr > td,
+    .listview-table > tbody > tr > td { border-top: 0 !important; }
 
     /* Each record row becomes a card */
     #listview-table > tbody > tr.listViewEntries,
