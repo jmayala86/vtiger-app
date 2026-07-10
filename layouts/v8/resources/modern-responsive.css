@@ -75,12 +75,27 @@
     /* Let cards flow instead of a horizontally scrolling spreadsheet */
     #table-content.table-container,
     .table-container {
-        overflow-x: visible;
+        /* The desktop list uses a fixed-height inner scroll region: List.js
+           sets the height to ~76% of the window and attaches perfectScrollbar.
+           On phones that leaves dead space below short lists and an
+           unnecessary inner scrollbar. Force the list to its natural height
+           and let the page itself scroll instead. !important is required to
+           beat both the inline height set in List.js and perfectScrollbar's
+           own `overflow: hidden !important`. */
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
         border: 0;
         box-shadow: none;
         background: transparent;
         border-radius: 0;
     }
+    /* Drop the perfectScrollbar rails that would otherwise linger on the
+       now natural-height container. */
+    #table-content.table-container > .ps-scrollbar-y-rail,
+    #table-content.table-container > .ps-scrollbar-x-rail,
+    .table-container > .ps-scrollbar-y-rail,
+    .table-container > .ps-scrollbar-x-rail { display: none !important; }
     /* Hide the column header row (and inline quick-search row) on phones */
     #listview-table > thead,
     .listview-table > thead { display: none; }
