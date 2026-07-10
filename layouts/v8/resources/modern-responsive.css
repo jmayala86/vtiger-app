@@ -85,19 +85,32 @@
     }
 
     /* ---------- WS1: List view → cards ---------- */
-    /* Let cards flow instead of a horizontally scrolling spreadsheet */
+    /* The desktop list uses a fixed ~76%-of-window inner scroll region that
+       List.js sets on the container (plus perfectScrollbar). On phones that
+       left dead space below short lists. Instead, let the list SIZE ITSELF to
+       its content and only scroll when it is genuinely taller than the space
+       between the toolbar and the fixed bottom nav:
+         - height:auto        -> beats the inline height List.js writes, so a
+                                  short list shrinks to fit (no dead space, no
+                                  scrollbar).
+         - max-height + auto   -> a long list caps at the available viewport
+                                  height and scrolls within itself, so every
+                                  record stays reachable.
+       The container-relative scroll is self-contained (it does not depend on
+       the whole document being scrollable). The `.table-container.ps-container`
+       selector (specificity 0,0,2,0) guarantees our overflow wins over
+       perfectScrollbar's own `.ps-container { overflow: hidden !important }`.
+       The 240px subtracted approximates the fixed topbar + list toolbar/pager
+       above the list and the bottom nav below it. */
     #table-content.table-container,
+    .table-container.ps-container,
     .table-container {
-        /* The desktop list uses a fixed-height inner scroll region: List.js
-           sets the height to ~76% of the window and attaches perfectScrollbar.
-           On phones that leaves dead space below short lists and an
-           unnecessary inner scrollbar. Force the list to its natural height
-           and let the page itself scroll instead. !important is required to
-           beat both the inline height set in List.js and perfectScrollbar's
-           own `overflow: hidden !important`. */
         height: auto !important;
-        max-height: none !important;
-        overflow: visible !important;
+        max-height: calc(100vh - 240px) !important;
+        max-height: calc(100dvh - 240px) !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch;
         border: 0;
         box-shadow: none;
         background: transparent;
