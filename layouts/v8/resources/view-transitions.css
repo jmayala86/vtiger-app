@@ -6,22 +6,32 @@
  * incoming pages and animate between them, which masks the reload latency and
  * makes module-to-module navigation feel like a native mobile app.
  *
- * Scope: intentionally limited to phones (max-width 767px), where the fixed
- * topbar + bottom nav make the effect feel native. Desktop/tablet behaviour is
- * left exactly as before.
+ * Effect: only the content area cross-fades; the fixed topbar and mobile
+ * bottom nav are held perfectly still so they read as native app chrome.
  *
- * Progressive enhancement: browsers without cross-document view transitions
- * (Firefox, older Safari/Chrome) simply ignore these rules and navigate
- * normally — no animation, nothing breaks. Supported today on Chromium >= 126
- * and Safari >= 18, i.e. current Chrome on Android and Safari on iOS.
+ * Scope: the visible effect is limited to phones (max-width 767px). On
+ * tablet/desktop the transition is skipped in JS (see Header.tpl), so that
+ * behaviour is left exactly as before.
+ *
+ * Compatibility notes:
+ *   - The `@view-transition` opt-in is kept at the TOP LEVEL of the stylesheet
+ *     (not nested inside @media). That is the portable form: Safari/WebKit does
+ *     not reliably honour `@view-transition` nested inside a conditional group
+ *     rule, and Safari on iOS is a primary target here. Desktop is instead
+ *     excluded via the JS guard, and the phone-only *styling* stays in @media.
+ *   - Progressive enhancement: browsers without cross-document view
+ *     transitions (Firefox, older Safari/Chrome) ignore all of this and
+ *     navigate normally. Supported today on Chromium >= 126 and Safari >= 18,
+ *     i.e. current Chrome on Android and Safari on iOS.
  **********************************************************************************/
 
-@media (max-width: 767px) {
+/* Opt this multi-page app into automatic cross-document transitions.
+   Top-level for maximum browser compatibility (see notes above). */
+@view-transition {
+    navigation: auto;
+}
 
-    /* Opt this multi-page app into automatic cross-document transitions. */
-    @view-transition {
-        navigation: auto;
-    }
+@media (max-width: 767px) {
 
     /* Give the fixed chrome (topbar + bottom nav) their own snapshots so they
        stay put across the navigation instead of being swept up in the
