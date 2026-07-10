@@ -1,0 +1,74 @@
+/**********************************************************************************
+ * Cross-document View Transitions (app-like page transitions)
+ *
+ * Vtiger is a classic multi-page app: every navigation is a full page load.
+ * The native View Transitions API lets the browser snapshot the outgoing and
+ * incoming pages and animate between them, which masks the reload latency and
+ * makes module-to-module navigation feel like a native mobile app.
+ *
+ * Scope: intentionally limited to phones (max-width 767px), where the fixed
+ * topbar + bottom nav make the effect feel native. Desktop/tablet behaviour is
+ * left exactly as before.
+ *
+ * Progressive enhancement: browsers without cross-document view transitions
+ * (Firefox, older Safari/Chrome) simply ignore these rules and navigate
+ * normally — no animation, nothing breaks. Supported today on Chromium >= 126
+ * and Safari >= 18, i.e. current Chrome on Android and Safari on iOS.
+ **********************************************************************************/
+
+@media (max-width: 767px) {
+
+    /* Opt this multi-page app into automatic cross-document transitions. */
+    @view-transition {
+        navigation: auto;
+    }
+
+    /* Give the fixed chrome (topbar + bottom nav) their own snapshots so they
+       stay put across the navigation instead of being swept up in the
+       full-viewport cross-fade. Each name must be unique per page. */
+    .app-fixed-navbar {
+        view-transition-name: app-topbar;
+    }
+
+    .mobile-bottom-nav {
+        view-transition-name: app-bottom-nav;
+    }
+
+    /* Hold the chrome perfectly still: no cross-fade, no movement. Because the
+       topbar/bottom nav are visually identical between pages this reads as the
+       bars simply staying in place while only the content changes. */
+    ::view-transition-group(app-topbar),
+    ::view-transition-group(app-bottom-nav) {
+        animation-duration: 0s;
+    }
+
+    ::view-transition-old(app-topbar),
+    ::view-transition-new(app-topbar),
+    ::view-transition-old(app-bottom-nav),
+    ::view-transition-new(app-bottom-nav) {
+        animation: none;
+        mix-blend-mode: normal;
+    }
+
+    /* Keep the new bars fully opaque instead of fading them in. */
+    ::view-transition-new(app-topbar),
+    ::view-transition-new(app-bottom-nav) {
+        opacity: 1;
+    }
+
+    /* The remaining content area gets a quick, native-feeling cross-fade. */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation-duration: 220ms;
+        animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+
+/* Honour users who ask for less motion: swap instantly, no animation. */
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
+}
